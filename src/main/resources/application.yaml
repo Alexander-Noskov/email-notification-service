@@ -7,21 +7,23 @@ spring:
     password: ${app.database.password}
   flyway:
     url: jdbc:postgresql://${app.database.host}/${app.database.db-name}
-    locations: classpath:db/migration
     user: ${app.database.username}
     password: ${app.database.password}
+    locations: classpath:db/migration
     baseline-on-migrate: true
     baseline-version: 0
   kafka:
+    admin:
+      auto-create: true
     bootstrap-servers: ${app.kafka.bootstrap-servers}
+    listener:
+      ack-mode: manual_immediate
+      concurrency: 3
     consumer:
       group-id: notification_group
       auto-offset-reset: earliest
-      key-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
-      value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
-      properties:
-        spring.deserializer.key.delegate.class: org.apache.kafka.common.serialization.StringDeserializer
-        spring.deserializer.value.delegate.class: org.springframework.kafka.support.serializer.JsonDeserializer
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       enable-auto-commit: false
       isolation-level: read_committed
     properties:
@@ -32,7 +34,7 @@ spring:
   mail:
     host: smtp.mail.ru
     port: 587
-    username: user
+    username: email@mail.com
     password: "pwd"
     properties:
       mail:
@@ -49,6 +51,7 @@ app:
   kafka:
     bootstrap-servers: localhost:29092,localhost:39092,localhost:49092
     topic: notifications
+    dlq-topic: notifications-dlq
     partitions: 3
-    concurrency: 3
     replication-factor: 3
+    listener-id: email-listener
