@@ -1,0 +1,54 @@
+server:
+  port: 8081
+spring:
+  datasource:
+    url: jdbc:postgresql://${app.database.host}/${app.database.db-name}
+    username: ${app.database.username}
+    password: ${app.database.password}
+  flyway:
+    url: jdbc:postgresql://${app.database.host}/${app.database.db-name}
+    locations: classpath:db/migration
+    user: ${app.database.username}
+    password: ${app.database.password}
+    baseline-on-migrate: true
+    baseline-version: 0
+  kafka:
+    bootstrap-servers: ${app.kafka.bootstrap-servers}
+    consumer:
+      group-id: notification_group
+      auto-offset-reset: earliest
+      key-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+      properties:
+        spring.deserializer.key.delegate.class: org.apache.kafka.common.serialization.StringDeserializer
+        spring.deserializer.value.delegate.class: org.springframework.kafka.support.serializer.JsonDeserializer
+      enable-auto-commit: false
+      isolation-level: read_committed
+    properties:
+      spring:
+        json:
+          trusted:
+            packages: '*'
+  mail:
+    host: smtp.mail.ru
+    port: 587
+    username: user
+    password: "pwd"
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+app:
+  database:
+    username: root
+    password: root
+    host: localhost:5432
+    db-name: notifications
+  kafka:
+    bootstrap-servers: localhost:29092,localhost:39092,localhost:49092
+    topic: notifications
+    partitions: 3
+    concurrency: 3
+    replication-factor: 3
