@@ -20,7 +20,7 @@ public class Notification {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "notification_request_id",nullable = false)
+    @Column(name = "notification_request_id", nullable = false)
     private UUID notificationRequestId;
 
     @Column(name = "kafka_received_time", nullable = false)

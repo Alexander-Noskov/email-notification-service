@@ -11,7 +11,7 @@ import java.util.UUID;
 public interface NotificationRepository extends JpaRepository<Notification, UUID> {
     @Query("select n from Notification n " +
            "where (:success is null or n.isSentSuccessfully = :success) and (:service is null or n.serviceName = :service) " +
-           "order by n.kafkaReceivedTime desc limit :limit offset :offset")
+           "order by n.kafkaReceivedTime asc limit :limit offset :offset")
     List<Notification> findAllByParam(
             @Param("limit") Integer limit,
             @Param("offset") Integer offset,

@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.UUID;
 
@@ -25,11 +26,11 @@ public class NotificationServiceImpl implements NotificationService {
 
         try {
             emailService.sendEmail(request.address(), request.messageSubject(), request.messageBody());
-            notification.setEmailSentTime(LocalDateTime.now());
+            notification.setEmailSentTime(LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS));
             notification.setSentSuccessfully(true);
             notificationRepository.save(notification);
         } catch (Exception e) {
-            notification.setEmailSentTime(LocalDateTime.now());
+            notification.setEmailSentTime(LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS));
             notification.setSentSuccessfully(false);
             notification.setErrorMessage(e.getMessage());
             notificationRepository.save(notification);
