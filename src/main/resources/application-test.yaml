@@ -1,0 +1,57 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://${app.database.host}/${app.database.db-name}
+    username: ${app.database.username}
+    password: ${app.database.password}
+  flyway:
+    url: jdbc:postgresql://${app.database.host}/${app.database.db-name}
+    user: ${app.database.username}
+    password: ${app.database.password}
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+    baseline-version: 0
+  kafka:
+    admin:
+      auto-create: true
+    bootstrap-servers: ${app.kafka.bootstrap-servers}
+    listener:
+      ack-mode: manual_immediate
+      concurrency: 1
+    consumer:
+      group-id: notification_group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      enable-auto-commit: false
+      isolation-level: read_committed
+    properties:
+      spring:
+        json:
+          trusted:
+            packages: '*'
+  jackson:
+    date-format: "dd.MM.yyyy HH:mm:ss.SSS"
+  mail:
+    host: smtp.mail.ru
+    port: 587
+    username: email@mail.com
+    password: "pwd"
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+app:
+  database:
+    username: root
+    password: root
+    host: localhost:5432
+    db-name: notifications
+  kafka:
+    bootstrap-servers: localhost:29092,localhost:39092,localhost:49092
+    topic: notifications
+    dlq-topic: notifications-dlq
+    partitions: 1
+    replication-factor: 1
+    listener-id: email-listener
