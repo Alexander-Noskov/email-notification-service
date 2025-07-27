@@ -31,6 +31,8 @@ spring:
         json:
           trusted:
             packages: '*'
+  jackson:
+    date-format: "dd.MM.yyyy HH:mm:ss.SSS"
   mail:
     host: smtp.mail.ru
     port: 587
