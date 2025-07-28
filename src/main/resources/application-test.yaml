@@ -24,6 +24,9 @@ spring:
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       enable-auto-commit: false
       isolation-level: read_committed
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
     properties:
       spring:
         json:
@@ -32,8 +35,8 @@ spring:
   jackson:
     date-format: "dd.MM.yyyy HH:mm:ss.SSS"
   mail:
-    host: smtp.mail.ru
-    port: 587
+    host: 127.0.0.1
+    port: 3025
     username: email@mail.com
     password: "pwd"
     properties:
